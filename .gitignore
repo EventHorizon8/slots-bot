@@ -34,5 +34,5 @@ tests/_support/_generated
 
 # environment variables
 .env
-.env.local
-.env.prod
+.env.*
+!.env.dist

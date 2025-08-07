@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\models;
 
+use app\behaviors\SnapshotChangesBehaviour;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -57,6 +58,16 @@ class SiteChangesSnapshot extends ActiveRecord
             'is_slot_available' => 'Is Slot Available',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors(): array
+    {
+        return [
+            SnapshotChangesBehaviour::class,
         ];
     }
 }

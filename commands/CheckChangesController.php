@@ -40,15 +40,11 @@ class CheckChangesController extends Controller
              */
             $strategy = new $strategyClass();
             $travelVisaInfos = $strategy->loadTargetData($site['url'] ?? '');
-            Console::output('Result: '.$travelVisaInfos);
+            Console::output('Result: ' . $travelVisaInfos);
             if (empty($travelVisaInfos)) {
                 Console::error('Cannot find any info');
                 continue;
             }
-            // Check if the site info is already in the database and compare it
-            $this->isContentChanged($country, $travelVisaInfos) ?
-                Console::output('Content has changed for ' . $country->getName()) :
-                Console::output('No changes detected for ' . $country->getName());
 
             // Save the new content to the database
             $this->saveResult($country, $site['url'], $travelVisaInfos) ?
@@ -57,15 +53,6 @@ class CheckChangesController extends Controller
         }
 
         return ExitCode::OK;
-    }
-
-    private function isContentChanged(CountryIso $country, string $newContent): bool
-    {
-        $existingSnapshot = SiteChangesSnapshot::find()
-            ->where(['country_iso' => $country->value])
-            ->orderBy(['created_at' => SORT_DESC])
-            ->one();
-        return $existingSnapshot?->content !== $newContent;
     }
 
     private function saveResult(CountryIso $country, string $url, string $travelVisaInfos): bool

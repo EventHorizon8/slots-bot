@@ -5,10 +5,10 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'parsedSites' => [
-        [
-            'name' => 'Portugal',
+        //look at \app\enum\CountryIso::enum
+        'PT' => [
             'url' => env('PT_URL', ''),
-            'strategy' => app\services\PTStrategy::class,
-        ]
+            'strategy' => \app\services\PTStrategy::class,
+        ],
     ]
 ];

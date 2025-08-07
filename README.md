@@ -7,5 +7,12 @@ Useful commands:
 ```shell
 # List of all commands
  php yii help
+ 
+ # Create migration
+ yii migrate/create create_news_table
+ 
+# Apply migrations
+yii migrate
+
 ```
 

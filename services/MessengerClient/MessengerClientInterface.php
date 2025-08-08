@@ -32,7 +32,7 @@ interface MessengerClientInterface
      *
      * @param string $recipient The ID of the recipient.
      * @param string $message The message to send.
-     * @return void
+     * @return bool
      */
     public function sendMessage(string $recipient, string $message): bool;
 

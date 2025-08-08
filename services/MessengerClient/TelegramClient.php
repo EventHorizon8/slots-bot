@@ -6,7 +6,10 @@ namespace app\services\MessengerClient;
 
 use JetBrains\PhpStorm\ArrayShape;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
+use yii\httpclient\Exception;
+use yii\log\Logger;
 
 class TelegramClient implements MessengerClientInterface
 {
@@ -46,15 +49,20 @@ class TelegramClient implements MessengerClientInterface
                 ->setData([
                     'chat_id' => $recipient,
                     'text' => $message,
+                    'parse_mode' => 'MarkdownV2', // Use MarkdownV2 for formatting
                 ])
                 ->send();
-
-            print_r($response->getContent());
+            Yii::getLogger()->log(
+                'Telegram response: ' . print_r($response->getData(), true),
+                Logger::LEVEL_INFO
+            );
         }
     }
 
     /**
      * @inheritDoc
+     * @throws InvalidConfigException
+     * @throws Exception
      */
     public function sendMessage(string $recipient, string $message): bool
     {

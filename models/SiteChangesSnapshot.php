@@ -7,6 +7,7 @@ namespace app\models;
 use app\behaviors\SnapshotChangesBehaviour;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "site_changes_snapshot".
@@ -38,7 +39,6 @@ class SiteChangesSnapshot extends ActiveRecord
             [['is_slot_available'], 'default', 'value' => 0],
             [['country_iso', 'url', 'content', 'created_at', 'updated_at'], 'required'],
             [['url', 'content'], 'string'],
-            [['is_slot_available'], 'default', 'value' => null],
             [['is_slot_available'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['country_iso'], 'string', 'max' => 2],
@@ -69,5 +69,21 @@ class SiteChangesSnapshot extends ActiveRecord
         return [
             SnapshotChangesBehaviour::class,
         ];
+    }
+
+    public function getReport(\DateTimeImmutable $start, \DateInterval $interval): array
+    {
+        $data = (new Query())
+            ->select(['country_iso', 'url', 'content', 'COUNT(*) AS count'])
+            ->from('site_changes_snapshot')
+            ->where([
+                'between',
+                'created_at',
+                $start->sub($interval)->format('Y-m-d H:i:s'),
+                $start->format('Y-m-d H:i:s'),
+            ])
+            ->groupBy(['country_iso', 'url', 'content'])
+            ->all();
+        return $data;
     }
 }

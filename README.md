@@ -6,13 +6,15 @@ Init new command in `commands` folder
 Useful commands:
 ```shell
 # List of all commands
- php yii help
+php yii help
  
  # Create migration
- yii migrate/create create_news_table
+php yii migrate/create create_news_table
  
 # Apply migrations
-yii migrate
+php yii migrate
+# Revert last migration
+php yii migrate/down
 
 ```
 

@@ -82,12 +82,8 @@ class TestMessengerController extends Controller
     {
         $message = 'Hello, this is a test message!';
 
-        try {
-            $messageSent = $this->client->sendMessage($recipient, $message);
-            Console::output($messageSent ? 'Message sent successfully.' : 'Failed to send message.');
-        } catch (\Exception $e) {
-            Console::error('Failed to send message: ' . $e->getMessage());
-        }
+        $messageSent = $this->client->sendMessage($recipient, $message);
+        Console::output($messageSent ? 'Message sent successfully.' : 'Failed to send message.');
         return ExitCode::OK;
     }
 }

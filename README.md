@@ -29,3 +29,14 @@ php yii test-messenger/get-users -m=telegram
 # recipient - you can take any user ID from the list of users
 php yii test-messenger/send-message -m=telegram {recipient}
 ```
+
+Setup on production server:
+```shell
+
+```
+
+TODO:
+1. We need to prepare webhook, which can update snapshot in DB to use this info for the future.
+2. We need to setup cron job to save snapshot in DB every day.
+3. We need to move db queries into somewhere in the system.
+4. We need to remove unused views and actions.

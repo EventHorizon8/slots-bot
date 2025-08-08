@@ -36,7 +36,7 @@ class CheckChangesController extends Controller
                 continue;
             }
             /**
-             * @var \app\services\CheckSiteStrategyInterface $strategy
+             * @var \app\services\Strategy\CheckSiteStrategyInterface $strategy
              */
             $strategy = new $strategyClass();
             $travelVisaInfos = $strategy->loadTargetData($site['url'] ?? '');

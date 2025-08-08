@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace app\services\Strategy;
 
 /**
  * CheckSiteStrategyInterface is a contract for different site checking strategies.

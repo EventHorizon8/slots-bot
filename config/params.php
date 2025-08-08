@@ -8,7 +8,9 @@ return [
         //look at \app\enum\CountryIso::enum
         'PT' => [
             'url' => env('PT_URL', ''),
-            'strategy' => \app\services\PTStrategy::class,
+            'strategy' => \app\services\Strategy\PTStrategy::class,
         ],
-    ]
+    ],
+    'telegramToken' => env('TELEGRAM_BOT_TOKEN', ''),
+    'telegramChatName' => env('TELEGRAM_BOT_NAME', ''),
 ];

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace app\services\Strategy;
 
 use DOMDocument;
 use yii\httpclient\Client;

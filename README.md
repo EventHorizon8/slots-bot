@@ -32,6 +32,12 @@ php yii test-messenger/send-message -m=telegram {recipient}
 
 Setup on production server:
 ```shell
+# Daily cron job to check for new slots
+php yii check-changes
+# Daily cron job to save new users
+php yii messenger-sender/get-users -m=telegram
+# Weekly cron job to send reports
+php yii messenger-sender/send-weekly-report-message -m=telegram
 
 ```
 

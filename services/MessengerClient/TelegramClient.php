@@ -49,7 +49,7 @@ class TelegramClient implements MessengerClientInterface
                 ->setData([
                     'chat_id' => $recipient,
                     'text' => $message,
-                    'parse_mode' => 'MarkdownV2', // Use MarkdownV2 for formatting
+                    //'parse_mode' => 'MarkdownV2',
                 ])
                 ->send();
             Yii::getLogger()->log(

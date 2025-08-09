@@ -45,4 +45,3 @@ TODO:
 1. We need to prepare webhook, which can update snapshot in DB to use this info for the future.
 2. We need to setup cron job to save snapshot in DB every day.
 3. We need to move db queries into somewhere in the system.
-4. We need to remove unused views and actions.

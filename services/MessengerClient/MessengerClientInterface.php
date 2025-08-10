@@ -13,6 +13,13 @@ interface MessengerClientInterface
     public function getInfo(): mixed;
 
     /**
+     * Sets the configuration for the messenger service.
+     *
+     * @return bool Returns true if the configuration was set successfully, false otherwise.
+     */
+    public function sendConfig(): bool;
+
+    /**
      * Retrieves a list of users from the messenger service.
      * @return array
      */
@@ -28,13 +35,34 @@ interface MessengerClientInterface
     public function sendMessages(array $recipients, string $message): void;
 
     /**
+     * Edits a message in the specified recipient's chat.
+     *
+     * @param string $recipient
+     * @param string $messageId
+     * @param string $text
+     * @param array|null $keyboard
+     * @return bool
+     */
+    public function editMessage(string $recipient, string $messageId, string $text, array $keyboard = null): bool;
+
+    /**
+     * Answers a callback query in the messenger service.
+     *
+     * @param string $callbackQueryId
+     * @param string $text
+     * @return mixed
+     */
+    public function answerCallbackQuery(string $callbackQueryId, string $text = ''): mixed;
+
+    /**
      * Sends a message to the specified recipient.
      *
      * @param string $recipient The ID of the recipient.
      * @param string $message The message to send.
+     * @param array $actions Optional actions to perform with the message.
      * @return bool
      */
-    public function sendMessage(string $recipient, string $message): bool;
+    public function sendMessage(string $recipient, string $message, array $actions = []): bool;
 
     /**
      * Receives messages from the messenger service.

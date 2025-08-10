@@ -6,12 +6,11 @@ namespace app\commands;
 
 use app\enum\CountryIso;
 use app\models\SiteChangesSnapshot;
-use app\models\UserSubscriber;
 use app\services\MessengerClient\MessengerClientInterface;
 use app\services\MessengerClient\MessengerFactory;
+use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
 /**
@@ -19,8 +18,8 @@ use yii\helpers\Console;
  * in a messaging application.
  *
  * This controller provides actions to:
- * - Retrieve a list of users subscribed to the bot.
- * `php yii messenger-sender/get-users -m={messenger}`
+ * - Set up the configuration for the messenger client.
+ * `php yii messenger-sender/set-up-config -m={messenger}`
  * - Send weekly report messages to users.
  * `php yii messenger-sender/send-weekly-report-message -m={messenger}`
  */
@@ -47,28 +46,18 @@ class MessengerSenderController extends Controller
     }
 
     /**
-     * we need to load users daily
+     * This action sets up the configuration for the messenger client.
+     *
      * @return int
-     * @throws \Throwable
      */
-    public function actionGetUsers(): int
+    public function actionSetUpConfig(): int
     {
-        $userList = $this->client->getUserList();
-
-        foreach ($userList as $user) {
-            $existedUser = UserSubscriber::find()
-                ->where(['chat_id' => $user['id']])
-                ->one();
-            if ($existedUser !== null) {
-                Console::output('User already exists: ' . $user['id']);
-                continue;
-            }
-
-            if ($this->saveUser($user)) {
-                Console::output('New user added: ' . $user['id']);
-            } else {
-                Console::error('Failed to save user: ' . $user['id']);
-            }
+        $this->client = MessengerFactory::create($this->messenger);
+        if ($this->client->sendConfig()) {
+            Console::output('Configuration set successfully.');
+        } else {
+            Console::error('Failed to set configuration.');
+            return ExitCode::UNSPECIFIED_ERROR;
         }
         return ExitCode::OK;
     }
@@ -80,14 +69,13 @@ class MessengerSenderController extends Controller
     public function actionSendWeeklyReportMessage(): int
     {
         try {
-            //load recipients
-            $recipients = UserSubscriber::find()->all();
-            $recipientIds = ArrayHelper::getColumn($recipients, 'chat_id');
-            if (!$recipientIds) {
-                Console::error('No recipients found.');
+            $recipientId = (string)Yii::$app->params['telegramAdminId'];
+            if (!$recipientId) {
+                Console::error('No recipient ID found in the configuration.');
                 return ExitCode::UNSPECIFIED_ERROR;
             }
-            //load all messages during and day
+            //We need to send report only for admin
+            //load all messages during week
             $startDate = new \DateTimeImmutable('now');
             $data = (new SiteChangesSnapshot())->getReport($startDate, new \DateInterval('P1W'));
             $report = '';
@@ -98,22 +86,11 @@ class MessengerSenderController extends Controller
                 $report .= 'Count: ' . ($datum['count'] ?? 0) . PHP_EOL;
                 $report .= str_repeat('-', 20) . PHP_EOL;
             }
-            $this->client->sendMessages($recipientIds, $report);
+            $this->client->sendMessage($recipientId, $report);
             Console::output('Messages sent successfully.');
         } catch (\Exception $e) {
             Console::error('Failed to send message: ' . $e->getMessage());
         }
         return ExitCode::OK;
-    }
-
-    private function saveUser(array $user): bool
-    {
-        $newUser = new UserSubscriber();
-        $newUser->full_name = $user['full_name'] ?? '';
-        $newUser->username = $user['username'] ?? '';
-        $newUser->chat_id = $user['id'];
-        $newUser->created_at = date('Y-m-d H:i:s');
-        $newUser->updated_at = date('Y-m-d H:i:s');
-        return $newUser->save();
     }
 }

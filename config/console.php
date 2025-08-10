@@ -26,6 +26,14 @@ $config = [
             ],
         ],
         'db' => $db,
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'baseUrl' => env('CURRENT_URL', ''),
+            'scriptUrl' => env('CURRENT_URL', ''),
+            'rules' => [
+            ],
+        ],
     ],
     'params' => $params,
     /*

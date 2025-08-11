@@ -49,22 +49,6 @@ class TelegramClient implements MessengerClientInterface
         }
     }
 
-    public function editMessage(string $recipient, string $messageId, string $text, array $keyboard = null): bool
-    {
-        $data = [
-            'chat_id' => $recipient,
-            'message_id' => $messageId,
-            'text' => $text,
-            'parse_mode' => 'HTML'
-        ];
-
-        if ($keyboard) {
-            $data['reply_markup'] = json_encode($keyboard);
-        }
-
-        return !empty($this->makeApiRequest('editMessageText', $data));
-    }
-
     /**
      * @inheritDoc
      */
@@ -83,7 +67,7 @@ class TelegramClient implements MessengerClientInterface
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public function sendMessage(string $recipient, string $message, array $actions = []): bool
+    public function sendMessage($recipient, string $message, array $actions = []): bool
     {
         $requestData = [
             'chat_id' => $recipient,
@@ -140,14 +124,6 @@ class TelegramClient implements MessengerClientInterface
 
     /**
      * @inheritDoc
-     */
-    public function receiveMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
      * @throws InvalidConfigException|Exception
      */
     public function sendConfig(bool $isActive = true): bool
@@ -163,6 +139,7 @@ class TelegramClient implements MessengerClientInterface
 
 
     /**
+     * Makes an API request to the Telegram bot.
      * @param string $method
      * @param array $params
      * @return mixed
@@ -187,11 +164,23 @@ class TelegramClient implements MessengerClientInterface
         return $response->getData();
     }
 
+    /**
+     * Starts the webhook for Telegram bot.
+     * @return void
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
     private function startWebhook(): void
     {
         $this->sendConfig();
     }
 
+    /**
+     * Removes the webhook for Telegram bot.
+     * @return void
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
     private function removeWebhook(): void
     {
         $this->sendConfig(false);

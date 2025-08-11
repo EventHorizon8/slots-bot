@@ -35,17 +35,6 @@ interface MessengerClientInterface
     public function sendMessages(array $recipients, string $message): void;
 
     /**
-     * Edits a message in the specified recipient's chat.
-     *
-     * @param string $recipient
-     * @param string $messageId
-     * @param string $text
-     * @param array|null $keyboard
-     * @return bool
-     */
-    public function editMessage(string $recipient, string $messageId, string $text, array $keyboard = null): bool;
-
-    /**
      * Answers a callback query in the messenger service.
      *
      * @param string $callbackQueryId
@@ -64,11 +53,5 @@ interface MessengerClientInterface
      */
     public function sendMessage(string $recipient, string $message, array $actions = []): bool;
 
-    /**
-     * Receives messages from the messenger service.
-     *
-     * @return array An array of received messages.
-     */
-    public function receiveMessages(): array;
 
 }

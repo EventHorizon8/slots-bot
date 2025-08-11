@@ -29,13 +29,6 @@ class EmptyClient implements MessengerClientInterface
     {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function editMessage(string $recipient, string $messageId, string $text, array $keyboard = null): bool
-    {
-        return true;
-    }
 
     /**
      * @inheritDoc
@@ -48,17 +41,9 @@ class EmptyClient implements MessengerClientInterface
     /**
      * @inheritDoc
      */
-    public function sendMessage(string $recipient, string $message, array $actions = []): bool
+    public function sendMessage( $recipient, string $message, array $actions = []): bool
     {
         return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function receiveMessages(): array
-    {
-        return [];
     }
 
     /**

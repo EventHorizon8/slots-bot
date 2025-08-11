@@ -29,10 +29,11 @@ class SnapshotChangesBehaviour extends Behavior
     {
         $model = $this->owner;
         //we need to send notification only if the content is changed
+        //and we need to check if it's admin
         if ($this->isContentChanged($model)) {
             //we need to send notification to the users
             $client = MessengerFactory::create('telegram');
-            $recipients = UserSubscriber::find()->all();
+            $recipients = UserSubscriber::getAdmins();
             $recipientIds = ArrayHelper::getColumn($recipients, 'chat_id');
             $country = CountryIso::tryFrom($model->country_iso)?->getName() ?? 'N/A';
             $client->sendMessages(
@@ -40,7 +41,10 @@ class SnapshotChangesBehaviour extends Behavior
                 "Changes detected on site: {$model->url}.\n" .
                 "Country: {$country}.\n" .
                 "Content: {$model->content}\n" .
-                "Please check the site for more details."
+                "Please check the site for more details.",
+                [
+                    ['text' => 'Mark as Available', 'callback_data' => 'mark_available']
+                ]
             );
         }
     }

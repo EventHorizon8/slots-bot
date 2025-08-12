@@ -27,8 +27,20 @@ services:
       - project-dev
     volumes:
       - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    env_file: ./.env
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
+    environment:
+      - TUNNEL_METRICS=0.0.0.0:49999
+    networks: [ project-dev ]
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "cloudflared", "version" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 networks:
   project-dev:

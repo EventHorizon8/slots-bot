@@ -1,0 +1,38 @@
+services:
+  fpm:
+    build:
+      context: .docker/local/php-fpm
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - project-dev
+
+  nginx:
+    build:
+      context: .docker/local/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - project-dev
+    depends_on:
+      fpm:
+        condition: service_started
+
+  database:
+    image: postgres:15-alpine
+    env_file: ./.env
+    networks:
+      - project-dev
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+
+networks:
+  project-dev:
+    driver: bridge
+
+volumes:
+  database_data:

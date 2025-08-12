@@ -11,7 +11,7 @@ return [
             'strategy' => \app\services\Strategy\PTStrategy::class,
         ],
     ],
-    'telegramAdminId' => env('TELEGRAM_ADMIN_ID', ''),
+    'telegramAdminId' => (string)env('TELEGRAM_ADMIN_ID', ''),
     'telegramToken' => env('TELEGRAM_BOT_TOKEN', ''),
     'telegramChatName' => env('TELEGRAM_BOT_NAME', ''),
 ];

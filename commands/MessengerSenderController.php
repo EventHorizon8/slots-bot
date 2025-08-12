@@ -69,7 +69,7 @@ class MessengerSenderController extends Controller
     public function actionSendWeeklyReportMessage(): int
     {
         try {
-            $recipientId = (string)Yii::$app->params['telegramAdminId'];
+            $recipientId = Yii::$app->params['telegramAdminId'];
             if (!$recipientId) {
                 Console::error('No recipient ID found in the configuration.');
                 return ExitCode::UNSPECIFIED_ERROR;

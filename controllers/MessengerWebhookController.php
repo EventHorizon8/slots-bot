@@ -54,7 +54,7 @@ class MessengerWebhookController extends Controller
         switch ($text) {
             case '/start':
                 if ($user->isAdmin()) {
-                    $this->bot->sendMessage($chatId, "Welcome Admin! Send me a link to check if the slot is available.");
+                    $this->bot->sendMessage($chatId, "Welcome Admin! You can manage embassy slots and notify users.");
                 } else {
                     $this->bot->sendMessage($chatId, "Welcome! You will receive notifications about available embassy slots.");
                 }
@@ -157,7 +157,7 @@ class MessengerWebhookController extends Controller
             $user->full_name = trim(($chat['first_name'] ?? '') . ' ' . ($chat['last_name'] ?? ''));
             $user->created_at = date('Y-m-d H:i:s');
             $user->updated_at = date('Y-m-d H:i:s');
-            $user->is_admin = ($chat['id'] === Yii::$app->params['telegramAdminId']) ? 1 : 0;
+            $user->is_admin = ($user->chat_id === Yii::$app->params['telegramAdminId']) ? 1 : 0;
             $user->save();
         }
 
